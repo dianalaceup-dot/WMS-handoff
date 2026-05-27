@@ -365,7 +365,6 @@ function AskPanel({ clients, onClose }) {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
   const [loading, setLoading] = useState(false);
-  const apiKey = import.meta.env.VITE_ANTHROPIC_KEY;
 
   const ask = async () => {
     if (!question.trim()) return;
@@ -373,23 +372,13 @@ function AskPanel({ clients, onClose }) {
     setAnswer("");
     try {
       const db = JSON.stringify(clients, null, 2);
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key": apiKey,
-          "anthropic-version": "2023-06-01",
-          "anthropic-dangerous-direct-browser-access": "true",
-        },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 1024,
-          system: "You are a helpful assistant for LaceUp WMS implementation team. Answer questions about the client handoff database concisely and clearly. The database contains client specifications for warehouse management system implementations.",
-          messages: [{ role: "user", content: `Client database:\n${db}\n\nQuestion: ${question}` }],
-        }),
-      });
-      const data = await res.json();
-      setAnswer(data.content?.[0]?.text || "No response.");
+      const res = await fetch("/api/ask", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ question, clients }),
+});
+const data = await res.json();
+setAnswer(data.answer || "No response.");
     } catch (e) {
       setAnswer("Error: " + e.message);
     }
