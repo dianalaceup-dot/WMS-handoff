@@ -13,7 +13,7 @@ export default async function handler(req, res) {
       "anthropic-version": "2023-06-01",
     },
     body: JSON.stringify({
-      model: "claude-sonnet-4-20250514",
+      model: "claude-sonnet-4-5",
       max_tokens: 1024,
       system: "You are a helpful assistant for LaceUp WMS implementation team.",
       messages: [{ role: "user", content: `Client database:\n${JSON.stringify(clients, null, 2)}\n\nQuestion: ${question}` }],
