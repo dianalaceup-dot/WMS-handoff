@@ -15,10 +15,10 @@ export default async function handler(req, res) {
     body: JSON.stringify({
       model: "claude-sonnet-4-20250514",
       max_tokens: 1024,
-      system: "You are a helpful assistant for LaceUp WMS implementation team. Answer questions about the client handoff database concisely and clearly.",
+      system: "You are a helpful assistant for LaceUp WMS implementation team.",
       messages: [{ role: "user", content: `Client database:\n${JSON.stringify(clients, null, 2)}\n\nQuestion: ${question}` }],
     }),
   });
   const data = await response.json();
-  res.status(200).json({ answer: data.content?.[0]?.text || "No response." });
+  res.status(200).json({ answer: data.content?.[0]?.text || null, error: data.error || null, full: data });
 }
